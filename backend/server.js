@@ -13,7 +13,12 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware de seguridad
-app.use(cors()); // Permitir solicitudes desde el frontend
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Permitir el frontend
+    credentials: true, // Permitir envío de cookies/tokens en las solicitudes
+  })
+);
 app.use(helmet()); // Configuración de seguridad HTTP
 app.use(morgan('dev')); // Logs de peticiones HTTP
 app.use(express.json()); // Parseo de JSON en requests
