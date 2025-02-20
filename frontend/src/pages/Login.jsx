@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { FaSpinner } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc"; // Icono de Google
+import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -26,7 +29,7 @@ export default function Login() {
       localStorage.setItem("user", JSON.stringify(user));
 
       toast.success("Inicio de sesión exitoso");
-      setTimeout(() => navigate("/"), 2000);
+      setTimeout(() => navigate("/"), 1000);
     } catch (err) {
       toast.error(err.response?.data?.message || "Error en el inicio de sesión");
     } finally {
@@ -39,8 +42,8 @@ export default function Login() {
       <Navbar />
       <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
       <div className="flex flex-grow items-center justify-center">
-        <div className="bg-white p-10 rounded-lg shadow-lg w-full max-w-lg">
-          <h2 className="text-3xl font-bold text-center text-blue-700 mb-4">Iniciar Sesión</h2>
+        <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+          <h2 className="text-2xl font-bold text-center text-blue-700 mb-4">Iniciar Sesión</h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block font-medium">Correo Electrónico</label>
@@ -64,12 +67,33 @@ export default function Login() {
             </div>
             <button
               type="submit"
-              className="w-full p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+              className="w-40 mx-auto p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center justify-center"
               disabled={loading}
             >
-              {loading ? "Ingresando..." : "Iniciar Sesión"}
+              {loading ? <FaSpinner className="animate-spin" /> : "Iniciar Sesión"}
             </button>
           </form>
+
+          {/* Separador */}
+          <div className="flex items-center my-4">
+            <hr className="flex-grow border-gray-300" />
+            <span className="mx-2 text-gray-500 text-sm">o</span>
+            <hr className="flex-grow border-gray-300" />
+          </div>
+
+          {/* Botón Google */}
+          <button className="w-full p-2 border rounded-lg flex items-center justify-center hover:bg-gray-100 transition">
+            <FcGoogle className="text-xl mr-2" />
+            Iniciar sesión con Google
+          </button>
+
+          {/* Link a registro */}
+          <p className="text-center text-sm text-gray-600 mt-4">
+            ¿Todavía no tienes una cuenta?{" "}
+            <Link to="/register" className="text-blue-600 font-semibold hover:underline">
+              Regístrese
+            </Link>
+          </p>
         </div>
       </div>
       <Footer />

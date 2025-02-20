@@ -3,7 +3,9 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import { FaSpinner } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
+import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -16,7 +18,6 @@ export default function Register() {
     password: "",
     confirmPassword: "",
   });
-  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
@@ -55,13 +56,12 @@ export default function Register() {
     if (!validateForm()) return;
 
     setLoading(true);
-    setError(null);
 
     try {
       const { confirmPassword, ...userData } = formData;
       const response = await axios.post("http://localhost:3000/api/users/register", userData);
       toast.success(response.data.message);
-      setTimeout(() => navigate("/"), 2000); // Redirigir después de un corto tiempo
+      setTimeout(() => navigate("/login"), 1000);
     } catch (err) {
       toast.error(err.response?.data?.message || "Error en el registro");
     } finally {
@@ -73,10 +73,9 @@ export default function Register() {
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-50 to-blue-200">
       <Navbar />
       <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
-      <div className="flex flex-grow items-center justify-center mt-30">
-        <div className="bg-white p-10 rounded-lg shadow-lg w-full max-w-lg">
-          <h2 className="text-3xl font-bold text-center text-blue-700 mb-4">Registro</h2>
-          {error && <p className="text-red-500 text-center">{error}</p>}
+      <div className="flex items-center justify-center min-h-screen pt-24">
+        <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+          <h2 className="text-2xl font-bold text-center text-blue-700 mb-4">Registro</h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             {[
               { name: "nombre", type: "text", placeholder: "Nombre" },
@@ -103,12 +102,33 @@ export default function Register() {
             ))}
             <button
               type="submit"
-              className="w-full p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+              className="w-40 mx-auto p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center justify-center"
               disabled={loading}
             >
-              {loading ? "Registrando..." : "Registrarse"}
+              {loading ? <FaSpinner className="animate-spin" /> : "Registrarse"}
             </button>
           </form>
+
+          {/* Separador */}
+          <div className="flex items-center my-4">
+            <hr className="flex-grow border-gray-300" />
+            <span className="mx-2 text-gray-500 text-sm">o</span>
+            <hr className="flex-grow border-gray-300" />
+          </div>
+
+          {/* Botón Google */}
+          <button className="w-full p-2 border rounded-lg flex items-center justify-center hover:bg-gray-100 transition">
+            <FcGoogle className="text-xl mr-2" />
+            Registrarse con Google
+          </button>
+
+          {/* Link a login */}
+          <p className="text-center text-sm text-gray-600 mt-4">
+            ¿Ya tienes una cuenta?{" "}
+            <Link to="/login" className="text-blue-600 font-semibold hover:underline">
+              Inicia sesión
+            </Link>
+          </p>
         </div>
       </div>
       <Footer />

@@ -9,7 +9,10 @@ export default function Navbar() {
 
   return (
     <nav className="fixed top-0 left-0 w-full flex justify-between items-center px-8 py-6 bg-transparent backdrop-blur-md">
-      <img href="/" src="/escudo_sax.svg" alt="Escudo Ayuntamiento" className="h-20 ml-4" />
+      {/* Escudo del Ayuntamiento ahora redirige a / */}
+      <Link to="/">
+        <img src="/escudo_sax.svg" alt="Escudo Ayuntamiento" className="h-20 ml-4 cursor-pointer" />
+      </Link>
 
       {/* Si el usuario no está autenticado, el icono redirige al login */}
       {!isAuthenticated() ? (
@@ -32,6 +35,12 @@ export default function Navbar() {
                 className="block px-4 py-2 text-gray-700 hover:bg-gray-200"
               >
                 Mis Incidencias
+              </Link>
+              <Link
+                to="/profile"
+                className="block px-4 py-2 text-gray-700 hover:bg-gray-200"
+              >
+                Ver mi cuenta
               </Link>
               <button
                 onClick={() => {
