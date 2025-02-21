@@ -70,13 +70,13 @@ export default function Register() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-50 to-blue-200">
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-100 to-blue-300">
       <Navbar />
       <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
-      <div className="flex items-center justify-center min-h-screen pt-24">
-        <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-          <h2 className="text-2xl font-bold text-center text-blue-700 mb-4">Registro</h2>
-          <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="flex items-center justify-center min-h-screen pt-32">
+        <div className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-2xl border border-gray-200">
+          <h2 className="text-3xl font-extrabold text-center text-blue-700 mb-6">Crear Cuenta</h2>
+          <form onSubmit={handleSubmit} className="space-y-5">
             {[
               { name: "nombre", type: "text", placeholder: "Nombre" },
               { name: "apellidos", type: "text", placeholder: "Apellidos" },
@@ -86,14 +86,11 @@ export default function Register() {
               { name: "confirmPassword", type: "password", placeholder: "Confirmar Contraseña" },
             ].map(({ name, type, placeholder }) => (
               <div key={name}>
-                <label className="block font-medium">
-                  {placeholder} <span className="text-red-500">*</span>
-                </label>
+                <label className="block font-semibold text-gray-700">{placeholder} <span className="text-red-500">*</span></label>
                 <input
                   type={type}
                   name={name}
-                  placeholder={placeholder}
-                  className="w-full p-2 border rounded"
+                  className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
                   onChange={handleChange}
                   required
                 />
@@ -102,7 +99,7 @@ export default function Register() {
             ))}
             <button
               type="submit"
-              className="w-40 mx-auto p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center justify-center"
+              className="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center justify-center font-semibold shadow-md"
               disabled={loading}
             >
               {loading ? <FaSpinner className="animate-spin" /> : "Registrarse"}
@@ -110,23 +107,23 @@ export default function Register() {
           </form>
 
           {/* Separador */}
-          <div className="flex items-center my-4">
+          <div className="flex items-center my-6">
             <hr className="flex-grow border-gray-300" />
-            <span className="mx-2 text-gray-500 text-sm">o</span>
+            <span className="mx-3 text-gray-500 text-sm font-medium">O</span>
             <hr className="flex-grow border-gray-300" />
           </div>
 
           {/* Botón Google */}
-          <button className="w-full p-2 border rounded-lg flex items-center justify-center hover:bg-gray-100 transition">
-            <FcGoogle className="text-xl mr-2" />
-            Registrarse con Google
+          <button className="w-full py-3 border border-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-100 transition shadow-sm">
+            <FcGoogle className="text-2xl mr-3" />
+            <span className="font-medium">Registrarse con Google</span>
           </button>
 
           {/* Link a login */}
-          <p className="text-center text-sm text-gray-600 mt-4">
+          <p className="text-center text-sm text-gray-600 mt-6">
             ¿Ya tienes una cuenta?{" "}
             <Link to="/login" className="text-blue-600 font-semibold hover:underline">
-              Inicia sesión
+              Inicia sesión aquí
             </Link>
           </p>
         </div>
