@@ -7,7 +7,7 @@ export default function Home() {
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-50 to-blue-200">
       <Navbar />
       <main className="flex-grow flex flex-col items-center justify-center text-center px-6">
-        <h1 className="text-5xl font-bold text-blue-700">Bienvenido a la Plataforma</h1>
+        <h1 className="text-5xl font-bold text-blue-700">Bienvenido a la Plataforma de incidencias del Ayuntamiento de Sax</h1>
         <p className="text-lg text-gray-700 mt-4 max-w-2xl">
           Deja tus quejas y sugerencias para mejorar nuestra comunidad.
         </p>

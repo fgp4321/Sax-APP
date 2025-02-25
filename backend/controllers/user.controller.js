@@ -5,60 +5,103 @@ const jwt = require('jsonwebtoken');
 const SECRET_KEY = process.env.JWT_SECRET
 
 const UserController = {
-  // Registro de usuario
-  register: async (req, res) => {
-    try {
-      const { nombre, apellidos, email, telefono, password } = req.body;
+// Registro de usuario
+register: async (req, res) => {
+  try {
+    const { nombre, apellidos, email, telefono, password } = req.body;
 
-      // Verificar si el email ya está en uso
-      const existingUser = await User.findByEmail(email);
-      if (existingUser) {
-        return res.status(400).json({ message: 'El email ya está registrado.' });
-      }
-
-      // Crear usuario
-      const userId = await User.create(nombre, apellidos, email, telefono, password);
-      res.status(201).json({ message: 'Usuario registrado exitosamente.', userId });
-    } catch (error) {
-      res.status(500).json({ message: 'Error en el servidor', error: error.message });
+    // Verificar si el email ya está en uso
+    const existingUser = await User.findByEmail(email);
+    if (existingUser) {
+      return res.status(400).json({ message: 'El email ya está registrado.' });
     }
-  },
 
-  // Login de usuario
-  login: async (req, res) => {
-    try {
-      const { email, password } = req.body;
-      const user = await User.findByEmail(email);
+    // Crear usuario
+    const userId = await User.create(nombre, apellidos, email, telefono, password);
+    
+    // Obtener usuario recién creado
+    const newUser = await User.findById(userId);
 
-      if (!user) {
-        return res.status(401).json({ message: 'Credenciales incorrectas' });
+    // Crear token JWT
+    const token = jwt.sign(
+      { id: newUser.id, email: newUser.email, rol: newUser.rol },
+      SECRET_KEY,
+      { expiresIn: '2h' }
+    );
+
+    // Guardar token en cookie
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 2 * 60 * 60 * 1000,
+    });
+
+    // Responder con usuario + token
+    res.status(201).json({
+      message: 'Usuario registrado exitosamente.',
+      token,
+      user: {
+        id: newUser.id,
+        nombre: newUser.nombre,
+        apellidos: newUser.apellidos,
+        email: newUser.email,
+        telefono: newUser.telefono,
+        rol: newUser.rol
       }
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Error en el servidor', error: error.message });
+  }
+},
 
-      // Comparar contraseñas
-      const isMatch = await bcrypt.compare(password, user.password_hash);
-      if (!isMatch) {
-        return res.status(401).json({ message: 'Credenciales incorrectas' });
-      }
 
-      // Crear token JWT
-      const token = jwt.sign(
-        { id: user.id, email: user.email, rol: user.rol },
-        SECRET_KEY,
-        { expiresIn: '2h' }
-      );
+// Login de usuario
+login: async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findByEmail(email);
 
-      // Guardar token en cookie segura
-      res.cookie('token', token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        maxAge: 2 * 60 * 60 * 1000, // 2 horas
-      });
-
-      res.json({ message: 'Inicio de sesión exitoso', user: { id: user.id, nombre: user.nombre, rol: user.rol } });
-    } catch (error) {
-      res.status(500).json({ message: 'Error en el servidor', error: error.message });
+    if (!user) {
+      return res.status(401).json({ message: 'Credenciales incorrectas' });
     }
-  },
+
+    // Comparar contraseñas
+    const isMatch = await bcrypt.compare(password, user.password_hash);
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Credenciales incorrectas' });
+    }
+
+    // Crear token JWT
+    const token = jwt.sign(
+      { id: user.id, email: user.email, rol: user.rol },
+      SECRET_KEY,
+      { expiresIn: '2h' }
+    );
+
+    // Guardar token en cookie segura
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 2 * 60 * 60 * 1000, // 2 horas
+    });
+
+    // Enviar todos los datos del usuario
+    res.json({
+      message: 'Inicio de sesión exitoso',
+      user: {
+        id: user.id,
+        nombre: user.nombre,
+        apellidos: user.apellidos,
+        email: user.email,
+        telefono: user.telefono,
+        rol: user.rol
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Error en el servidor', error: error.message });
+  }
+},
+
 
   // Logout de usuario
   logout: (req, res) => {
