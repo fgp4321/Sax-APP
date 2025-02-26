@@ -16,8 +16,8 @@ register: async (req, res) => {
       return res.status(400).json({ message: 'El email ya está registrado.' });
     }
 
-    // Crear usuario
-    const userId = await User.create(nombre, apellidos, email, telefono, password);
+    // Forzar el rol "ciudadano"
+    const userId = await User.create(nombre, apellidos, email, telefono, password, 'ciudadano');
     
     // Obtener usuario recién creado
     const newUser = await User.findById(userId);
@@ -36,7 +36,6 @@ register: async (req, res) => {
       maxAge: 2 * 60 * 60 * 1000,
     });
 
-    // Responder con usuario + token
     res.status(201).json({
       message: 'Usuario registrado exitosamente.',
       token,
@@ -53,6 +52,7 @@ register: async (req, res) => {
     res.status(500).json({ message: 'Error en el servidor', error: error.message });
   }
 },
+
 
 
 // Login de usuario
