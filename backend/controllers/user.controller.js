@@ -37,7 +37,7 @@ register: async (req, res) => {
     });
 
     res.status(201).json({
-      message: 'Usuario registrado exitosamente.',
+      message: 'Usuario registrado y autenticado exitosamente.',
       token,
       user: {
         id: newUser.id,
