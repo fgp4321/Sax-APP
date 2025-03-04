@@ -8,9 +8,12 @@ const adminAuthMiddleware = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, SECRET_KEY);
-    if (decoded.rol !== 'admin') {
-      return res.status(403).json({ message: 'Acceso denegado. Solo administradores.' });
+
+    // Permitir tanto "admin" como "superadmin"
+    if (!['admin', 'superadmin'].includes(decoded.rol)) {
+      return res.status(403).json({ message: 'Acceso denegado. Se requiere rol de administrador.' });
     }
+
     req.user = decoded;
     next();
   } catch (error) {
