@@ -3,13 +3,14 @@ const bcrypt = require('bcryptjs');
 
 const User = {
   // Crear un nuevo usuario (Registro)
-  create: async (nombre, apellidos, email, telefono, password, rol = 'ciudadano') => {
+  create: async (dni, nombre, apellidos, email, telefono, password, rol = 'ciudadano') => {
     try {
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
-      const sql = 'INSERT INTO usuarios (nombre, apellidos, email, telefono, password_hash, rol) VALUES (?, ?, ?, ?, ?, ?)';
+      const sql = 'INSERT INTO usuarios (dni, nombre, apellidos, email, telefono, password_hash, rol) VALUES (?, ?, ?, ?, ?, ?, ?)';
+      
       return new Promise((resolve, reject) => {
-        db.query(sql, [nombre, apellidos, email, telefono, hashedPassword, rol], (err, result) => {
+        db.query(sql, [dni.toUpperCase(), nombre, apellidos, email, telefono, hashedPassword, rol], (err, result) => {
           if (err) reject(err);
           else resolve(result.insertId);
         });
@@ -18,6 +19,7 @@ const User = {
       throw error;
     }
   },
+  
 
   // Buscar usuario por email
   findByEmail: async (email) => {
@@ -30,9 +32,20 @@ const User = {
     });
   },
 
+  // Buscar usuario por DNI
+  findByDNI: async (dni) => {
+    const sql = 'SELECT * FROM usuarios WHERE dni = ? LIMIT 1';
+    return new Promise((resolve, reject) => {
+      db.query(sql, [dni], (err, result) => {
+        if (err) reject(err);
+        else resolve(result[0] || null);
+      });
+    });
+  },
+
   // Obtener usuario por ID
   findById: async (id) => {
-    const sql = 'SELECT id, nombre, apellidos, email, telefono, rol, created_at FROM usuarios WHERE id = ?';
+    const sql = 'SELECT id, dni, nombre, apellidos, email, telefono, rol, created_at FROM usuarios WHERE id = ?';
     return new Promise((resolve, reject) => {
       db.query(sql, [id], (err, result) => {
         if (err) reject(err);
@@ -40,6 +53,17 @@ const User = {
       });
     });
   },
+
+  findByIdentifier: async (identifier) => {
+    const sql = 'SELECT * FROM usuarios WHERE email = ? OR dni = ? LIMIT 1';
+    return new Promise((resolve, reject) => {
+      db.query(sql, [identifier, identifier.toUpperCase()], (err, result) => {
+        if (err) reject(err);
+        else resolve(result[0] || null);
+      });
+    });
+  },
+  
 
   // Actualizar datos del usuario
   update: async (id, nombre, apellidos, email, telefono) => {

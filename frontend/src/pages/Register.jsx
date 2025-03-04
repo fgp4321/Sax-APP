@@ -12,12 +12,13 @@ import esFlag from "@/assets/spain-flag.png";
 
 export default function Register() {
   const [formData, setFormData] = useState({
-    nombre: "",
-    apellidos: "",
-    email: "",
-    telefono: "",
-    password: "",
-    confirmPassword: "",
+    dni: '',
+    nombre: '',
+    apellidos: '',
+    email: '',
+    telefono: '',
+    password: '',
+    confirmPassword: '',
   });
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
@@ -25,11 +26,13 @@ export default function Register() {
 
   const validateForm = () => {
     let validationErrors = {};
+    const dniRegex = /^[0-9]{8}[A-Z]$/;
     const nameRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$/;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
     const phoneRegex = /^(6|7|8|9)\d{8}$/;
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
 
+    if (!dniRegex.test(formData.dni)) validationErrors.dni = 'Formato de DNI incorrecto';
     if (!nameRegex.test(formData.nombre)) validationErrors.nombre = "Solo letras y espacios";
     if (!nameRegex.test(formData.apellidos)) validationErrors.apellidos = "Solo letras y espacios";
     if (!emailRegex.test(formData.email)) validationErrors.email = "Correo no válido";
@@ -42,8 +45,13 @@ export default function Register() {
   };
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ 
+      ...formData, 
+      [name]: name === "dni" ? value.toUpperCase() : value 
+    });
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -80,6 +88,7 @@ export default function Register() {
           <h2 className="text-3xl font-extrabold text-center text-blue-700 mb-6">Crear Cuenta</h2>
           <form onSubmit={handleSubmit} className="space-y-5">
             {[
+              { name: "dni", type: "text", placeholder: "DNI" },
               { name: "nombre", type: "text", placeholder: "Nombre" },
               { name: "apellidos", type: "text", placeholder: "Apellidos" },
               { name: "email", type: "email", placeholder: "Correo Electrónico" },

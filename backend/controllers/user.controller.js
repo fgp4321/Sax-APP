@@ -8,7 +8,16 @@ const UserController = {
 // Registro de usuario
 register: async (req, res) => {
   try {
-    const { nombre, apellidos, email, telefono, password } = req.body;
+    let { dni, nombre, apellidos, email, telefono, password } = req.body;
+
+    // Formatear DNI a mayúsculas y sin guion
+    dni = dni.toUpperCase().replace('-', '');
+
+    // Verificar si el DNI ya está en uso
+    const existingDNI = await User.findByDNI(dni);
+    if (existingDNI) {
+      return res.status(400).json({ message: 'El DNI ya está registrado.' });
+    }
 
     // Verificar si el email ya está en uso
     const existingUser = await User.findByEmail(email);
@@ -16,15 +25,13 @@ register: async (req, res) => {
       return res.status(400).json({ message: 'El email ya está registrado.' });
     }
 
-    // Forzar el rol "ciudadano"
-    const userId = await User.create(nombre, apellidos, email, telefono, password, 'ciudadano');
-    
-    // Obtener usuario recién creado
+    // Crear usuario
+    const userId = await User.create(dni, nombre, apellidos, email, telefono, password, 'ciudadano');
     const newUser = await User.findById(userId);
 
     // Crear token JWT
     const token = jwt.sign(
-      { id: newUser.id, email: newUser.email, rol: newUser.rol },
+      { id: newUser.id, dni: newUser.dni, email: newUser.email, rol: newUser.rol },
       SECRET_KEY,
       { expiresIn: '2h' }
     );
@@ -39,14 +46,7 @@ register: async (req, res) => {
     res.status(201).json({
       message: 'Usuario registrado y autenticado exitosamente.',
       token,
-      user: {
-        id: newUser.id,
-        nombre: newUser.nombre,
-        apellidos: newUser.apellidos,
-        email: newUser.email,
-        telefono: newUser.telefono,
-        rol: newUser.rol
-      }
+      user: newUser
     });
   } catch (error) {
     res.status(500).json({ message: 'Error en el servidor', error: error.message });
@@ -55,52 +55,33 @@ register: async (req, res) => {
 
 
 
-// Login de usuario
 login: async (req, res) => {
   try {
-    const { email, password } = req.body;
-    const user = await User.findByEmail(email);
+    const { identifier, password } = req.body; // Cambiamos email y dni por identifier
+    if (!identifier || !password) {
+      return res.status(400).json({ message: 'Se requieren identificador y contraseña' });
+    }
 
+    const user = await User.findByIdentifier(identifier); // Buscar por email o DNI
     if (!user) {
       return res.status(401).json({ message: 'Credenciales incorrectas' });
     }
 
-    // Comparar contraseñas
     const isMatch = await bcrypt.compare(password, user.password_hash);
     if (!isMatch) {
       return res.status(401).json({ message: 'Credenciales incorrectas' });
     }
 
-    // Crear token JWT
-    const token = jwt.sign(
-      { id: user.id, email: user.email, rol: user.rol },
-      SECRET_KEY,
-      { expiresIn: '2h' }
-    );
+    const token = jwt.sign({ id: user.id, dni: user.dni, email: user.email, rol: user.rol }, SECRET_KEY, { expiresIn: '2h' });
 
-    // Guardar token en cookie segura
-    res.cookie('token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 2 * 60 * 60 * 1000, // 2 horas
-    });
+    res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', maxAge: 2 * 60 * 60 * 1000 });
+    res.json({ message: 'Inicio de sesión exitoso', user });
 
-    // Enviar todos los datos del usuario
-    res.json({
-      message: 'Inicio de sesión exitoso',
-      user: {
-        id: user.id,
-        nombre: user.nombre,
-        apellidos: user.apellidos,
-        email: user.email,
-        telefono: user.telefono,
-        rol: user.rol
-      }
-    });
   } catch (error) {
     res.status(500).json({ message: 'Error en el servidor', error: error.message });
   }
 },
+
 
 
   // Logout de usuario

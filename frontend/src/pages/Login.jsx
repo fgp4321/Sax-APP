@@ -10,7 +10,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 export default function Login() {
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [formData, setFormData] = useState({ identifier: '', password: '' });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -46,11 +46,10 @@ export default function Login() {
           <h2 className="text-3xl font-extrabold text-center text-blue-700 mb-6">Iniciar Sesión</h2>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label className="block font-semibold text-gray-700">Correo Electrónico <span className="text-red-500">*</span></label>
-
+              <label className="block font-semibold text-gray-700">Correo Electrónico o DNI <span className="text-red-500">*</span></label>
               <input
-                type="email"
-                name="email"
+                type="text"
+                name="identifier"
                 className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
                 onChange={handleChange}
                 required

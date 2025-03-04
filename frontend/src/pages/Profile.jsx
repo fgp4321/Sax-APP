@@ -2,7 +2,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useEffect, useState } from "react";
 import { isAuthenticated, getUser } from "@/utils/auth";
-import { FaClipboardList, FaUserEdit, FaUserCircle, FaUserTag } from "react-icons/fa";
+import { FaClipboardList, FaUserEdit, FaUserCircle, FaUserTag, FaPlusCircle, FaIdCard } from "react-icons/fa";
 
 export default function Profile() {
   const [user, setUser] = useState(null);
@@ -15,7 +15,6 @@ export default function Profile() {
   }, []);
 
   if (!isAuthenticated() || !user) {
-    console.log("Usuario no autenticado o datos de usuario no disponibles.");
     return (
       <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100 text-gray-700">
         <h2 className="text-3xl font-bold">Acceso denegado</h2>
@@ -31,17 +30,17 @@ export default function Profile() {
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-50 to-blue-200">
       <Navbar />
       <main className="flex-grow flex flex-col items-center text-center px-6 mt-32">
-        <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-lg">
+        <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-lg relative">
           <FaUserCircle className="text-gray-600 text-8xl mx-auto" />
           <h1 className="text-4xl font-semibold text-blue-700 mt-4">
             {user?.nombre || "No disponible"} {user?.apellidos || ""}
           </h1>
 
-          <div className="text-gray-600 text-lg mt-2">
-            📧 {user?.email || "No disponible"}
-          </div>
-          <div className="text-gray-600 text-lg">
-            📞 {user?.telefono || "No disponible"}
+          <div className="text-gray-600 text-lg mt-2">📧 {user?.email || "No disponible"}</div>
+          <div className="text-gray-600 text-lg">📞 {user?.telefono || "No disponible"}</div>
+          <div className="text-gray-600 text-lg flex items-center justify-center mt-2">
+            <FaIdCard className="mr-2 text-gray-500" />
+            {user?.dni || "No disponible"}
           </div>
 
           <div className="mt-4 flex items-center justify-center bg-gray-200 px-4 py-2 rounded-lg w-fit mx-auto">
@@ -51,6 +50,14 @@ export default function Profile() {
             </span>
           </div>
 
+          {/* Botón "Editar mis datos personales" */}
+          <a
+            href="/editar-perfil"
+            className="mt-6 inline-flex items-center px-4 py-2 bg-gray-600 text-white rounded-lg shadow-md hover:bg-gray-700 transition"
+          >
+            <FaUserEdit className="mr-2" /> Editar mis datos
+          </a>
+
           <div className="mt-8 flex gap-4 justify-center">
             <a
               href="/mis-incidencias"
@@ -58,15 +65,18 @@ export default function Profile() {
             >
               <FaClipboardList className="mr-2" /> Ver mis incidencias
             </a>
+
+            {/* Botón "Añadir Nueva Incidencia" dentro del perfil */}
             <a
-              href="/editar-perfil"
-              className="px-6 py-3 flex items-center bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition"
+              href="/nueva-incidencia"
+              className="px-4 py-2 flex items-center bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 transition"
             >
-              <FaUserEdit className="mr-2" /> Cambiar mis datos
+              <FaPlusCircle className="mr-2" /> Nueva incidencia
             </a>
           </div>
         </div>
       </main>
+
       <Footer />
     </div>
   );
