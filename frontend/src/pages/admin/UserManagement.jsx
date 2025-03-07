@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Table, TableHeader, TableRow, TableCell, TableBody } from "@/components/ui/table";
 import { Pagination } from "@/components/ui/pagination";
+import { Eye } from "lucide-react";
 
 export default function UserManagement() {
   const [users, setUsers] = useState([]);
@@ -43,9 +44,27 @@ export default function UserManagement() {
     fetchUsers();
   };
 
+  const handleViewDetails = (user) => {
+    Swal.fire({
+      title: "Detalles del usuario",
+      html: `<p><strong>ID:</strong> ${user.id}</p>
+             <p><strong>DNI/NIF:</strong> ${user.dni}</p>
+             <p><strong>Nombre:</strong> ${user.nombre}</p>
+             <p><strong>Apellidos:</strong> ${user.apellidos}</p>
+             <p><strong>Email:</strong> ${user.email}</p>
+             <p><strong>Teléfono:</strong> ${user.telefono}</p>
+             <p><strong>Rol:</strong> ${user.rol}</p>
+             <p><strong>Estado:</strong> ${user.deleted_at ? "Desactivado" : "Activo"}</p>
+             <p><strong>Fecha de creación:</strong> ${user.created_at}</p>
+             <p><strong>Última modificación:</strong> ${user.updated_at}</p>`,
+      icon: "info",
+    });
+  };
+
   const filteredUsers = users.filter((user) =>
     user.nombre.toLowerCase().includes(search.toLowerCase()) ||
-    user.email.toLowerCase().includes(search.toLowerCase())
+    user.email.toLowerCase().includes(search.toLowerCase()) ||
+    user.dni.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -84,7 +103,10 @@ export default function UserManagement() {
                   {user.deleted_at ? "Desactivado" : "Activo"}
                 </span>
               </TableCell>
-              <TableCell>
+              <TableCell className="flex gap-2 items-center">
+                <Button variant="ghost" onClick={() => handleViewDetails(user)}>
+                  <Eye className="w-5 h-5 text-gray-700" />
+                </Button>
                 {user.deleted_at ? (
                   <Button onClick={() => handleReactivate(user.id)} className="bg-green-500">
                     Reactivar
