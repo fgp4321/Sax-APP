@@ -3,17 +3,28 @@ import Home from "@/pages/Home";
 import Register from "@/pages/Register";
 import Login from "@/pages/Login";
 import Profile from "@/pages/Profile";
-
+import UserManagement from "@/pages/admin/UserManagement";
+import PrivateRoute from "@/routes/PrivateRoute";
+import AdminRoute from "@/routes/AdminRoute";
 
 export default function AppRoutes() {
   return (
     <Router>
       <Routes>
+        {/* Rutas públicas */}
         <Route path="/" element={<Home />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/profile" element={<Profile />} />
 
+        {/* Rutas privadas */}
+        <Route element={<PrivateRoute />}>
+          <Route path="/profile" element={<Profile />} />
+        </Route>
+
+        {/* Rutas de administración */}
+        <Route element={<AdminRoute />}>
+          <Route path="/admin/users" element={<UserManagement />} />
+        </Route>
       </Routes>
     </Router>
   );
