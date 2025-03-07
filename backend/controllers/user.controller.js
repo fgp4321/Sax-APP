@@ -127,10 +127,12 @@ const UserController = {
     }
   },
 
-  // Obtener todos los usuarios con filtros, búsqueda y ordenación
+  /**
+   * 🔹 Obtener todos los usuarios (Administrador)
+   */
   getAllUsers: async (req, res) => {
     try {
-      const { estado = 'todos', search = '', sortBy = 'created_at', order = 'DESC' } = req.query;
+      const { estado, search, sortBy, order } = req.query;
       const users = await User.getAllUsers(estado, search, sortBy, order);
       res.json(users);
     } catch (error) {
@@ -138,24 +140,47 @@ const UserController = {
     }
   },
 
-  // Desactivar usuario (borrado lógico)
+  /**
+   * 🔹 Modificar información de un usuario (Incluye rol)
+   */
+  updateUser: async (req, res) => {
+    try {
+      const { nombre, apellidos, email, telefono, rol } = req.body;
+      const { id } = req.params;
+
+      const result = await User.update(id, nombre, apellidos, email, telefono, rol);
+      if (!result) return res.status(400).json({ message: 'No se pudo actualizar el usuario' });
+
+      res.json({ message: 'Usuario actualizado correctamente' });
+    } catch (error) {
+      res.status(500).json({ message: 'Error en el servidor', error: error.message });
+    }
+  },
+
+  /**
+   * 🔹 Desactivar usuario (borrado lógico)
+   */
   deactivateUser: async (req, res) => {
     try {
       const { id } = req.params;
       const result = await User.deactivate(id);
       if (!result) return res.status(400).json({ message: 'No se pudo desactivar el usuario' });
+
       res.json({ message: 'Usuario desactivado correctamente' });
     } catch (error) {
       res.status(500).json({ message: 'Error en el servidor', error: error.message });
     }
   },
 
-  // Reactivar usuario
+  /**
+   * 🔹 Reactivar usuario
+   */
   reactivateUser: async (req, res) => {
     try {
       const { id } = req.params;
       const result = await User.reactivate(id);
       if (!result) return res.status(400).json({ message: 'No se pudo reactivar el usuario' });
+
       res.json({ message: 'Usuario reactivado correctamente' });
     } catch (error) {
       res.status(500).json({ message: 'Error en el servidor', error: error.message });
