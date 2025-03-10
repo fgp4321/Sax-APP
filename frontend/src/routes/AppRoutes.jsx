@@ -4,6 +4,9 @@ import Register from "@/pages/Register";
 import Login from "@/pages/Login";
 import Profile from "@/pages/Profile";
 import UserManagement from "@/pages/admin/UserManagement";
+import Formulario from "@/pages/Formulario";
+
+
 import PrivateRoute from "@/routes/PrivateRoute";
 import AdminRoute from "@/routes/AdminRoute";
 
@@ -19,6 +22,7 @@ export default function AppRoutes() {
         {/* Rutas privadas */}
         <Route element={<PrivateRoute />}>
           <Route path="/profile" element={<Profile />} />
+          <Route path="/formulario" element={<Formulario />} />
         </Route>
 
         {/* Rutas de administración */}

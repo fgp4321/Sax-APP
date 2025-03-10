@@ -8,7 +8,8 @@ export default function Home() {
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-50 to-blue-200">
       <Navbar />
       <main className="flex-grow flex flex-col items-center justify-center text-center px-6">
-        <h1 className="text-5xl font-bold text-blue-700">Bienvenido a la Plataforma de incidencias del Ayuntamiento de Sax</h1>
+        <h1 className="text-5xl font-bold text-blue-700">Incidencias - Quejas - Sugerencias</h1>
+        <h1 className="text-5xl font-bold text-blue-700">Ayuntamiento de Sax</h1>
         <p className="text-lg text-gray-700 mt-4 max-w-2xl">
           Deja tus quejas y sugerencias para mejorar nuestra comunidad.
         </p>
@@ -16,7 +17,7 @@ export default function Home() {
         {!isAuthenticated() ? (
           <>
             <p className="text-red-600 font-medium mt-4">
-              Para crear incidencias, debes estar registrado y haber iniciado sesión en la plataforma.
+              Para crear tickets, debes estar registrado y haber iniciado sesión en la plataforma.
             </p>
             <a
               href="/register"
@@ -31,15 +32,15 @@ export default function Home() {
               href="/mis-incidencias"
               className="px-6 py-3 bg-orange-600 text-white rounded-lg text-lg shadow-md hover:bg-orange-700 transition"
             >
-              Mis Incidencias
+              Mis Tickets
             </a>
 
             {/* Botón "Nueva Incidencia" solo para usuarios autenticados */}
             <a
-              href="/nueva-incidencia"
+              href="/formulario"
               className="px-6 py-3 flex items-center bg-green-600 text-white rounded-lg text-lg shadow-md hover:bg-green-700 transition"
             >
-              <FaPlusCircle className="mr-2" /> Nueva incidencia
+              <FaPlusCircle className="mr-2" /> Nuevo Ticket
             </a>
           </div>
         )}

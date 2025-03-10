@@ -51,27 +51,27 @@ export default function Profile() {
           </div>
 
           {/* Botón "Editar mis datos personales" */}
-          <a
+          {/* <a
             href="/editar-perfil"
             className="mt-6 inline-flex items-center px-4 py-2 bg-gray-600 text-white rounded-lg shadow-md hover:bg-gray-700 transition"
           >
             <FaUserEdit className="mr-2" /> Editar mis datos
-          </a>
+          </a> */}
 
           <div className="mt-8 flex gap-4 justify-center">
             <a
-              href="/mis-incidencias"
+              href="/mis-tickets"
               className="px-6 py-3 flex items-center bg-orange-600 text-white rounded-lg shadow-md hover:bg-orange-700 transition"
             >
-              <FaClipboardList className="mr-2" /> Ver mis incidencias
+              <FaClipboardList className="mr-2" /> Ver mis tickets
             </a>
 
-            {/* Botón "Añadir Nueva Incidencia" dentro del perfil */}
+            {/* Botón "Añadir Nuevo Ticket" dentro del perfil */}
             <a
-              href="/nueva-incidencia"
+              href="/formulario"
               className="px-4 py-2 flex items-center bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 transition"
             >
-              <FaPlusCircle className="mr-2" /> Nueva incidencia
+              <FaPlusCircle className="mr-2" /> Nuevo ticket
             </a>
           </div>
         </div>

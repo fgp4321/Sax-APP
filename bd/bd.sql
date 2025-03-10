@@ -16,14 +16,27 @@ CREATE TABLE usuarios (
     deleted_at TIMESTAMP NULL DEFAULT NULL
 );
 
--- Tabla de Incidencias
-CREATE TABLE incidencias (
+-- Tabla de Tickets (Quejas, Incidencias y Sugerencias)
+CREATE TABLE tickets (
     id INT AUTO_INCREMENT PRIMARY KEY,
     usuario_id INT NOT NULL,
-    tipo_incidencia ENUM('aceras y calzadas', 'alumbrado', 'animales muertos o abandonados', 'limpieza de calles', 'mobiliario urbano', 'parques y jardines', 'plagas de insectos y roedores', 'puntos de agua', 'señales', 'vehículos abandonados', 'otros') NOT NULL,
+    categoria ENUM('Incidencia', 'Queja', 'Sugerencia') NOT NULL,
+    subcategoria ENUM(
+        'Aceras y calzadas', 
+        'Alumbrado', 
+        'Animales muertos o abandonados', 
+        'Limpieza de calles', 
+        'Mobiliario urbano', 
+        'Parques y jardines', 
+        'Plagas de insectos y roedores', 
+        'Puntos de agua', 
+        'Señales', 
+        'Vehículos abandonados', 
+        'Otros'
+    ) NOT NULL,
     descripcion TEXT NOT NULL,
-    ubicacion VARCHAR(255),  -- Puede almacenar dirección o coordenadas
-    adjunto MEDIUMBLOB NULL, -- Guardar rutas de archivos subidos (JSON si son varios)
+    ubicacion VARCHAR(255) NULL, -- Dirección o coordenadas (Opcional)
+    adjunto MEDIUMBLOB NULL, -- Para archivos adjuntos (Guardar JSON si son varios)
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
