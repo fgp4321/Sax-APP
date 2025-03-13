@@ -35,6 +35,8 @@ app.use(limiter);
 // Rutas
 
 app.use('/api/users', require('./routes/user.routes'));
+app.use('/api/tickets', require('./routes/ticket.routes'));
+
 
 app.get('/', (req, res) => {
   res.send('✅ API en funcionamiento');

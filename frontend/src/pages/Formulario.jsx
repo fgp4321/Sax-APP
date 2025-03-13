@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { FaPaperclip, FaPaperPlane } from "react-icons/fa";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 
 const FormularioTicket = ({ usuario }) => {
   const [form, setForm] = useState({
@@ -11,6 +12,7 @@ const FormularioTicket = ({ usuario }) => {
     correo: usuario?.correo || "",
     telefono: usuario?.telefono || "",
     descripcion: "",
+    ubicacion: "",
     archivo: null,
   });
 
@@ -31,18 +33,72 @@ const FormularioTicket = ({ usuario }) => {
       correo: usuario.email || "",
       telefono: usuario.telefono || "",
     }));
+
+    // Obtener ubicación del usuario si el navegador lo permite
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const ubicacion = `${position.coords.latitude},${position.coords.longitude}`;
+          setForm((prev) => ({ ...prev, ubicacion }));
+        },
+        (error) => {
+          console.error("Error obteniendo ubicación:", error);
+          toast.warn("No se pudo obtener la ubicación", { autoClose: 2000 });
+        }
+      );
+    }
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.categoria || !form.subcategoria || !form.nombre || !form.correo || !form.telefono || !form.descripcion) {
+
+    if (!form.categoria || !form.subcategoria || !form.nombre || !form.correo || !form.telefono || !form.descripcion || !form.ubicacion) {
       setError("Por favor, complete todos los campos obligatorios.");
       return;
     }
 
     setError("");
-    console.log("Formulario enviado:", form);
-    alert("Formulario enviado correctamente.");
+
+    const formData = new FormData();
+    formData.append("categoria", form.categoria);
+    formData.append("subcategoria", form.subcategoria);
+    formData.append("nombre", form.nombre);
+    formData.append("correo", form.correo);
+    formData.append("telefono", form.telefono);
+    formData.append("descripcion", form.descripcion);
+    formData.append("ubicacion", form.ubicacion);
+    if (form.archivo) formData.append("archivo", form.archivo);
+
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await fetch("http://localhost:3000/api/tickets", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) throw new Error(data.message || "Error al enviar el ticket");
+
+      toast.success("Ticket enviado correctamente", { autoClose: 2000 });
+
+      setForm({
+        categoria: "",
+        subcategoria: "",
+        nombre: usuario?.nombre || "",
+        correo: usuario?.correo || "",
+        telefono: usuario?.telefono || "",
+        descripcion: "",
+        ubicacion: "",
+        archivo: null,
+      });
+    } catch (error) {
+      toast.error(error.message, { autoClose: 2000 });
+    }
   };
 
   return (
@@ -58,8 +114,9 @@ const FormularioTicket = ({ usuario }) => {
             { label: "Nombre", type: "text", name: "nombre" },
             { label: "Correo", type: "email", name: "correo" },
             { label: "Teléfono", type: "tel", name: "telefono" },
+            { label: "Ubicación", type: "text", name: "ubicacion", readOnly: true },
             { label: "Descripción", type: "textarea", name: "descripcion" },
-          ].map(({ label, type, name, options }) => (
+          ].map(({ label, type, name, options, readOnly }) => (
             <div key={name}>
               <label className="block text-gray-500 font-medium mb-3">{label} <span className="text-red-500">*</span></label>
               {type === "select" ? (
@@ -90,6 +147,7 @@ const FormularioTicket = ({ usuario }) => {
                   value={form[name]}
                   onChange={(e) => setForm({ ...form, [name]: e.target.value })}
                   required
+                  readOnly={readOnly}
                 />
               )}
             </div>
