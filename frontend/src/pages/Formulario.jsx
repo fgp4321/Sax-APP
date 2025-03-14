@@ -10,9 +10,6 @@ const FormularioTicket = ({ usuario }) => {
   const [form, setForm] = useState({
     categoria: "",
     subcategoria: "",
-    nombre: usuario?.nombre || "",
-    correo: usuario?.correo || "",
-    telefono: usuario?.telefono || "",
     descripcion: "",
     ubicacion: "",
     archivo: null,
@@ -30,15 +27,6 @@ const FormularioTicket = ({ usuario }) => {
   ];
 
   useEffect(() => {
-    const usuario = JSON.parse(localStorage.getItem("user")) || {};
-    setForm((prev) => ({
-      ...prev,
-      nombre: usuario.nombre || "",
-      correo: usuario.email || "",
-      telefono: usuario.telefono || "",
-    }));
-
-    // Obtener ubicación del usuario si el navegador lo permite
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -47,7 +35,8 @@ const FormularioTicket = ({ usuario }) => {
         },
         (error) => {
           console.error("Error obteniendo ubicación:", error);
-          toast.warn("No se pudo obtener la ubicación", { autoClose: 2000 });
+          toast.warn("No se pudo obtener la ubicación, ingrésela manualmente", { autoClose: 3000 });
+          setForm((prev) => ({ ...prev, ubicacion: "" })); // Permite la edición manual
         }
       );
     }
@@ -56,7 +45,7 @@ const FormularioTicket = ({ usuario }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!form.categoria || !form.subcategoria || !form.nombre || !form.correo || !form.telefono || !form.descripcion || !form.ubicacion) {
+    if (!form.categoria || !form.subcategoria || !form.descripcion || !form.ubicacion) {
       setError("Por favor, complete todos los campos obligatorios.");
       return;
     }
@@ -66,9 +55,6 @@ const FormularioTicket = ({ usuario }) => {
     const formData = new FormData();
     formData.append("categoria", form.categoria);
     formData.append("subcategoria", form.subcategoria);
-    formData.append("nombre", form.nombre);
-    formData.append("correo", form.correo);
-    formData.append("telefono", form.telefono);
     formData.append("descripcion", form.descripcion);
     formData.append("ubicacion", form.ubicacion);
     if (form.archivo) formData.append("adjunto", form.archivo);
@@ -97,9 +83,6 @@ const FormularioTicket = ({ usuario }) => {
       setForm({
         categoria: "",
         subcategoria: "",
-        nombre: usuario?.nombre || "",
-        correo: usuario?.correo || "",
-        telefono: usuario?.telefono || "",
         descripcion: "",
         ubicacion: "",
         archivo: null,
@@ -120,9 +103,7 @@ const FormularioTicket = ({ usuario }) => {
           {[
             { label: "Categoría", type: "select", name: "categoria", options: categorias },
             { label: "Subcategoría", type: "select", name: "subcategoria", options: subcategorias },
-            { label: "Nombre", type: "text", name: "nombre" },
-            { label: "Correo", type: "email", name: "correo" },
-            { label: "Teléfono", type: "tel", name: "telefono" },
+
             { label: "Ubicación", type: "text", name: "ubicacion", readOnly: true },
             { label: "Descripción", type: "textarea", name: "descripcion" },
           ].map(({ label, type, name, options, readOnly }) => (
