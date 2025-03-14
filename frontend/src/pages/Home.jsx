@@ -29,7 +29,7 @@ export default function Home() {
         ) : (
           <div className="mt-6 flex flex-col items-center gap-4">
             <a
-              href="/mis-incidencias"
+              href="/tickets"
               className="px-6 py-3 bg-orange-600 text-white rounded-lg text-lg shadow-md hover:bg-orange-700 transition"
             >
               Mis Tickets

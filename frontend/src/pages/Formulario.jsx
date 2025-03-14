@@ -77,7 +77,7 @@ const FormularioTicket = ({ usuario }) => {
 
       toast.success("Ticket creado correctamente", { autoClose: 2000 });
       setTimeout(() => {
-        navigate("/mis-tickets");
+        navigate("/tickets");
       }, 2000);
       
       setForm({

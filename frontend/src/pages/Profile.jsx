@@ -78,7 +78,7 @@ export default function Profile() {
 
           <div className="mt-8 flex gap-4 justify-center">
             <a
-              href="/mis-tickets"
+              href="/tickets"
               className="px-6 py-3 flex items-center bg-orange-600 text-white rounded-lg shadow-md hover:bg-orange-700 transition"
             >
               <FaClipboardList className="mr-2" /> Ver mis tickets

@@ -18,6 +18,25 @@ const Ticket = {
   },
 
   /**
+   * 🔹 Obtener todos los tickets de un usuario
+   */
+  findByUser: async (usuario_id) => {
+    const sql = `
+      SELECT t.*, u.nombre AS usuario_nombre, u.email AS usuario_email
+      FROM tickets t
+      JOIN usuarios u ON t.usuario_id = u.id
+      WHERE t.usuario_id = ? AND t.deleted_at IS NULL
+    `;
+
+    return new Promise((resolve, reject) => {
+      db.query(sql, [usuario_id], (err, result) => {
+        if (err) reject(err);
+        else resolve(result);
+      });
+    });
+  },
+
+  /**
    * 🔹 Obtener un ticket por su ID
    */
   findById: async (id) => {

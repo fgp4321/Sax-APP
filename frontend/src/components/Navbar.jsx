@@ -32,7 +32,7 @@ export default function Navbar() {
             <div className="p-2 text-gray-700 border-b text-center font-semibold">
               {user.nombre} {user.apellidos?.split(" ")[0]}
             </div>         <Link
-                to="/mis-tickets"
+                to="/tickets"
                 className="block px-4 py-2 text-gray-700 hover:bg-gray-200"
               >
                  Mis Tickets

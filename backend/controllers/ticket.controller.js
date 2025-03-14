@@ -45,12 +45,26 @@ const TicketController = {
   // Obtener todos los tickets del usuario autenticado
   getByUser: async (req, res) => {
     try {
+      if (!req.user || !req.user.id) {
+        console.log("⚠️ Usuario no autenticado:", req.user);
+        return res.status(401).json({ message: 'Usuario no autenticado' });
+      }
+  
+      console.log("✅ ID del usuario autenticado:", req.user.id);
+  
       const usuario_id = req.user.id;
       const tickets = await Ticket.findByUser(usuario_id);
-
+  
+      if (!tickets.length) {
+        console.log("⚠️ No se encontraron tickets para el usuario con ID:", usuario_id);
+        return res.status(404).json({ message: 'No se encontraron tickets para este usuario' });
+      }
+  
+      console.log("🎟 Tickets encontrados:", tickets.length);
       res.json(tickets);
     } catch (error) {
-      res.status(500).json({ message: 'Error en el servidor', error: error.message });
+      console.error("🔥 Error al obtener los tickets:", error);
+      res.status(500).json({ message: "Error en el servidor", error: error.message });
     }
   },
 
