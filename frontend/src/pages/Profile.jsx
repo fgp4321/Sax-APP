@@ -2,10 +2,14 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useEffect, useState } from "react";
 import { isAuthenticated, getUser } from "@/utils/auth";
-import { FaClipboardList, FaUserEdit, FaUserCircle, FaUserTag, FaPlusCircle, FaIdCard } from "react-icons/fa";
+import { FaClipboardList, FaUserEdit, FaUserCircle, FaUserTag, FaPlusCircle, FaIdCard, FaSignOutAlt } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+
 
 export default function Profile() {
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     if (isAuthenticated()) {
@@ -13,6 +17,12 @@ export default function Profile() {
       setUser(userData);
     }
   }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/login");
+  };
 
   if (!isAuthenticated() || !user) {
     return (
@@ -32,6 +42,14 @@ export default function Profile() {
       <main className="flex-grow flex flex-col items-center text-center px-6 mt-32">
         <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-lg relative">
           <FaUserCircle className="text-gray-600 text-8xl mx-auto" />
+          {/* Botón de Cerrar Sesión */}
+          <button
+            onClick={handleLogout}
+            className="absolute top-4 right-4 p-2 text-red-600 hover:text-red-800 transition"
+            title="Cerrar sesión"
+          >
+            <FaSignOutAlt className="text-2xl" />
+          </button>
           <h1 className="text-4xl font-semibold text-blue-700 mt-4">
             {user?.nombre || "No disponible"} {user?.apellidos || ""}
           </h1>
