@@ -74,7 +74,7 @@ const UserController = {
       const token = jwt.sign({ id: user.id, dni: user.dni, email: user.email, rol: user.rol }, SECRET_KEY, { expiresIn: '2h' });
 
       res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', maxAge: 2 * 60 * 60 * 1000 });
-      res.json({ message: 'Inicio de sesión exitoso', user });
+      res.json({ message: 'Inicio de sesión exitoso', token, user });
     } catch (error) {
       res.status(500).json({ message: 'Error en el servidor', error: error.message });
     }
