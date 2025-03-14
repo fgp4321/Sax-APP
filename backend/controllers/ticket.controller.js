@@ -4,20 +4,29 @@ const TicketController = {
   // Crear un nuevo ticket
   create: async (req, res) => {
     try {
-      const { categoria, subcategoria, descripcion, ubicacion, adjunto } = req.body;
-      const usuario_id = req.user.id; // Se obtiene del token JWT
+        console.log("📌 [DEBUG] req.body recibido:", req.body);
+        console.log("📌 [DEBUG] req.file recibido:", req.file); // Verificar el archivo en consola
 
-      const ticketId = await Ticket.create(usuario_id, categoria, subcategoria, descripcion, ubicacion, adjunto);
-      const newTicket = await Ticket.findById(ticketId);
+        const { categoria, subcategoria, descripcion, ubicacion } = req.body;
+        const usuario_id = req.user.id;
 
-      res.status(201).json({
-        message: 'Ticket creado exitosamente.',
-        ticket: newTicket,
-      });
+        // Verificar si hay un archivo adjunto
+        const adjunto = req.file ? req.file.filename : null;
+
+        const ticketId = await Ticket.create(usuario_id, categoria, subcategoria, descripcion, ubicacion, adjunto);
+        const newTicket = await Ticket.findById(ticketId);
+
+        res.status(201).json({
+            message: "Ticket creado exitosamente.",
+            ticket: newTicket,
+        });
     } catch (error) {
-      res.status(500).json({ message: 'Error en el servidor', error: error.message });
+        console.error("🚨 [ERROR] Error en la operación create:", error);
+        res.status(500).json({ message: "Error en el servidor", error: error.message });
     }
-  },
+},
+
+
 
   // Obtener un ticket por ID
   getById: async (req, res) => {

@@ -12,6 +12,9 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+app.use(express.json()); // Parseo de JSON en requests
+
+
 // Middleware de seguridad
 app.use(
   cors({
@@ -21,7 +24,6 @@ app.use(
 );
 app.use(helmet()); // Configuración de seguridad HTTP
 app.use(morgan('dev')); // Logs de peticiones HTTP
-app.use(express.json()); // Parseo de JSON en requests
 app.use(cookieParser());
 
 // Rate Limiting (Máximo 100 requests por IP cada 15 minutos)

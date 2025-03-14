@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import { FaPaperclip, FaPaperPlane } from "react-icons/fa";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Navbar from "@/components/Navbar";
+import { useNavigate } from "react-router-dom";
+
 
 const FormularioTicket = ({ usuario }) => {
   const [form, setForm] = useState({
@@ -15,6 +17,8 @@ const FormularioTicket = ({ usuario }) => {
     ubicacion: "",
     archivo: null,
   });
+
+  const navigate = useNavigate();
 
   const [error, setError] = useState("");
 
@@ -67,7 +71,7 @@ const FormularioTicket = ({ usuario }) => {
     formData.append("telefono", form.telefono);
     formData.append("descripcion", form.descripcion);
     formData.append("ubicacion", form.ubicacion);
-    if (form.archivo) formData.append("archivo", form.archivo);
+    if (form.archivo) formData.append("adjunto", form.archivo);
 
     try {
       const token = localStorage.getItem("token");
@@ -85,8 +89,11 @@ const FormularioTicket = ({ usuario }) => {
 
       if (!response.ok) throw new Error(data.message || "Error al enviar el ticket");
 
-      toast.success("Ticket enviado correctamente", { autoClose: 2000 });
-
+      toast.success("Ticket creado correctamente", { autoClose: 2000 });
+      setTimeout(() => {
+        navigate("/mis-tickets");
+      }, 2000);
+      
       setForm({
         categoria: "",
         subcategoria: "",
@@ -105,6 +112,7 @@ const FormularioTicket = ({ usuario }) => {
   return (
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-100 to-blue-300 p-6 pt-32">
       <Navbar />
+      <ToastContainer position="top-right" autoClose={2000} />
       <div className="bg-white p-12 rounded-2xl shadow-xl max-w-4xl w-full">
         <h1 className="text-3xl font-bold text-center text-blue-700 mb-8">Reporte de Ticket</h1>
 
