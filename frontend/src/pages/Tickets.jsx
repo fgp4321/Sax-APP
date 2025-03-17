@@ -4,6 +4,9 @@ import axios from "axios";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
+const GoogleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+
+
 export default function Tickets() {
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -120,7 +123,7 @@ export default function Tickets() {
             {selectedTicket.ubicacion && (
               <iframe
                 className="w-full h-40 mt-3 rounded-lg"
-                src={`https://www.google.com/maps/embed/v1/place?key=TU_API_KEY&q=${selectedTicket.ubicacion}`}
+                src={`https://www.google.com/maps/embed/v1/place?key=${GoogleMapsApiKey}&q=${selectedTicket.ubicacion}`}
                 allowFullScreen
               ></iframe>
             )}
