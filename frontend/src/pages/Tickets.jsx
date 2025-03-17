@@ -6,7 +6,6 @@ import Footer from "@/components/Footer";
 
 const GoogleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
-
 export default function Tickets() {
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -85,7 +84,7 @@ export default function Tickets() {
                       {categorizedTickets[categoria].map((ticket) => (
                         <li
                           key={ticket.id}
-                          className="bg-white p-3 rounded-lg shadow border border-gray-300 cursor-pointer"
+                          className="bg-white p-3 rounded-lg shadow border border-gray-300 cursor-pointer transition hover:shadow-lg"
                           onClick={() => setSelectedTicket(ticket)}
                         >
                           <div className="flex justify-between">
@@ -109,10 +108,10 @@ export default function Tickets() {
       </div>
       <Footer />
 
-      {/* Modal (versión con fondo negro) */}
+      {/* Nuevo Modal Mejorado */}
       {selectedTicket && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+        <div className="fixed inset-0 bg-oklch(0.901 0.058 230.902) bg-opacity-30 backdrop-blur-sm flex items-center justify-center transition-opacity duration-300">
+          <div className="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-md transform transition-all scale-100">
             <h2 className="text-lg font-bold text-blue-700">{selectedTicket.nombre}</h2>
             <p className="text-gray-600">{selectedTicket.descripcion}</p>
             <p className="text-sm text-gray-500">Categoría: {selectedTicket.categoria}</p>
@@ -139,9 +138,14 @@ export default function Tickets() {
             )}
 
             {/* Botón para cerrar */}
-            <button className="mt-4 bg-red-500 text-white px-4 py-2 rounded" onClick={() => setSelectedTicket(null)}>
-              Cerrar
-            </button>
+            <div className="flex justify-end mt-4">
+              <button
+                className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition"
+                onClick={() => setSelectedTicket(null)}
+              >
+                Cerrar
+              </button>
+            </div>
           </div>
         </div>
       )}

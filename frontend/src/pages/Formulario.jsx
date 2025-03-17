@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Navbar from "@/components/Navbar";
 import { useNavigate } from "react-router-dom";
 
+const GoogleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
 const FormularioTicket = ({ usuario }) => {
   const [form, setForm] = useState({
