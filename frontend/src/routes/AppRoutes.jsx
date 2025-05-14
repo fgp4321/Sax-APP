@@ -6,7 +6,7 @@ import Profile from "@/pages/Profile";
 import UserManagement from "@/pages/admin/UserManagement";
 import Formulario from "@/pages/Formulario";
 import Tickets from "@/pages/Tickets";
-
+import DesfibriladorMaps from "@/pages/DesfibriladorMaps";
 
 
 import PrivateRoute from "@/routes/PrivateRoute";
@@ -20,6 +20,7 @@ export default function AppRoutes() {
         <Route path="/" element={<Home />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/mapa-desfibriladores" element={<DesfibriladorMaps />} />
 
         {/* Rutas privadas */}
         <Route element={<PrivateRoute />}>
