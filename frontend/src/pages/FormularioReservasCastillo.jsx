@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FaCalendarAlt, FaClock, FaPaperPlane } from "react-icons/fa";
+import { FaCalendarAlt, FaPaperPlane } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Navbar from "@/components/Navbar";
@@ -41,7 +41,6 @@ const FormularioReserva = ({ usuario }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const { nombre, apellidos, telefono, email, fecha, horario, numero_personas } = form;
 
     if (!nombre || !apellidos || !telefono || !email || !fecha || !horario || !numero_personas) {
@@ -70,15 +69,15 @@ const FormularioReserva = ({ usuario }) => {
 
   const filtrarDiasPermitidos = (date) => {
     const day = date.getDay();
-    return day === 5 || day === 6 || day === 0; // viernes, sábado, domingo
+    return day === 5 || day === 6 || day === 0;
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-green-100 to-green-300 p-6 pt-32">
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-100 to-blue-300 p-6 pt-32">
       <Navbar />
       <ToastContainer position="top-right" />
       <div className="bg-white p-10 rounded-2xl shadow-xl max-w-4xl w-full">
-        <h1 className="text-3xl font-bold text-center text-green-700 mb-8">Reserva tu visita al castillo</h1>
+        <h1 className="text-3xl font-bold text-center text-blue-700 mb-8">Reserva tu visita al castillo</h1>
 
         <form className="space-y-6" onSubmit={handleSubmit}>
           {/* Nombre y Apellidos */}
@@ -129,7 +128,7 @@ const FormularioReserva = ({ usuario }) => {
             </div>
           </div>
 
-          {/* Fecha */}
+          {/* Fecha con icono */}
           <div>
             <label className="block text-gray-600 font-medium mb-2">Fecha <span className="text-red-500">*</span></label>
             <div className="relative">
@@ -139,12 +138,12 @@ const FormularioReserva = ({ usuario }) => {
                 filterDate={filtrarDiasPermitidos}
                 placeholderText="Selecciona una fecha válida"
                 locale="es"
-                className="w-full p-4 border border-gray-300 rounded-xl"
                 dateFormat="dd/MM/yyyy"
                 minDate={new Date()}
+                className="w-full p-4 pr-12 border border-gray-300 rounded-xl"
                 required
               />
-              <FaCalendarAlt className="absolute right-4 top-4 text-gray-400" />
+              {/* <FaCalendarAlt className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" /> */}
             </div>
           </div>
 
@@ -168,7 +167,7 @@ const FormularioReserva = ({ usuario }) => {
             </select>
           </div>
 
-          {/* Nº de personas */}
+          {/* Nº personas */}
           <div>
             <label className="block text-gray-600 font-medium mb-2">Nº de personas <span className="text-red-500">*</span></label>
             <input
@@ -184,11 +183,11 @@ const FormularioReserva = ({ usuario }) => {
           {/* Error */}
           {error && <p className="text-red-500 text-sm">{error}</p>}
 
-          {/* Botón Enviar */}
+          {/* Botón enviar */}
           <div className="flex justify-center">
             <button
               type="submit"
-              className="flex items-center gap-3 bg-green-500 text-white font-bold px-6 py-3 rounded-xl text-lg hover:bg-green-600 transition shadow-md"
+              className="flex items-center gap-3 bg-blue-500 text-white font-bold px-6 py-3 rounded-xl text-lg hover:bg-blue-600 transition shadow-md"
             >
               <FaPaperPlane className="text-white" />
               Reservar

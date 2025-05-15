@@ -1,5 +1,6 @@
 const express = require('express');
 const ReservaController = require('../controllers/reserva.controller');
+const authMiddleware = require('../middlewares/auth');
 const adminAuthMiddleware = require('../middlewares/adminAuth');
 
 const router = express.Router();
