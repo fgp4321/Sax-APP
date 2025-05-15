@@ -12,17 +12,11 @@ registerLocale("es", es);
 
 const horarios = [
   { label: "--- MAÑANAS ---", disabled: true },
-  { label: "Viernes 9:30 a 13:30", hora_inicio: "09:30:00", hora_fin: "13:30:00" },
-  { label: "Sábado 9:30 a 13:30", hora_inicio: "09:30:00", hora_fin: "13:30:00" },
-  { label: "Domingo 9:30 a 13:30", hora_inicio: "09:30:00", hora_fin: "13:30:00" },
-  { label: "Visita guiada - Viernes 9:30 a 13:30", hora_inicio: "09:30:00", hora_fin: "13:30:00" },
-  { label: "Visita guiada - Sábado 9:30 a 13:30", hora_inicio: "09:30:00", hora_fin: "13:30:00" },
-  { label: "Visita guiada - Domingo 9:30 a 13:30", hora_inicio: "09:30:00", hora_fin: "13:30:00" },
+  { label: "9:30 a 13:30", hora_inicio: "09:30:00", hora_fin: "13:30:00" },
+  { label: "Visita guiada - 9:30 a 13:30", hora_inicio: "09:30:00", hora_fin: "13:30:00" },
   { label: "--- TARDES ---", disabled: true },
-  { label: "Viernes 16:00 a 18:00", hora_inicio: "16:00:00", hora_fin: "18:00:00" },
-  { label: "Sábado 16:00 a 18:00", hora_inicio: "16:00:00", hora_fin: "18:00:00" },
-  { label: "Visita guiada - Viernes 16:00 a 18:00", hora_inicio: "16:00:00", hora_fin: "18:00:00" },
-  { label: "Visita guiada - Sábado 16:00 a 18:00", hora_inicio: "16:00:00", hora_fin: "18:00:00" },
+  { label: "16:00 a 18:00", hora_inicio: "16:00:00", hora_fin: "18:00:00" },
+  { label: "Visita guiada - 16:00 a 18:00", hora_inicio: "16:00:00", hora_fin: "18:00:00" },
 ];
 
 const FormularioReserva = ({ usuario }) => {

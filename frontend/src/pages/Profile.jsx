@@ -2,7 +2,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useEffect, useState } from "react";
 import { isAuthenticated, getUser } from "@/utils/auth";
-import { FaClipboardList, FaUserEdit, FaUserCircle, FaUserTag, FaPlusCircle, FaIdCard, FaSignOutAlt } from "react-icons/fa";
+import { FaClipboardList, FaUserEdit, FaUserCircle, FaUserTag, FaPlusCircle, FaIdCard, FaSignOutAlt, FaMapMarkedAlt, FaLandmark } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 
@@ -90,6 +90,44 @@ export default function Profile() {
               className="px-4 py-2 flex items-center bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 transition"
             >
               <FaPlusCircle className="mr-2" /> Nuevo ticket
+            </a>
+          </div>
+        </div>
+        {/* Sección de accesos rápidos a servicios */}
+        <div className="mt-16 px-4 w-full max-w-5xl mx-auto">
+          <h2 className="text-2xl font-bold text-blue-700 mb-6 text-center">¿Qué necesitas hoy?</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <a
+              href="/averias"
+              className="flex items-center p-5 bg-white shadow-md rounded-xl hover:bg-blue-100 transition"
+            >
+              <FaLandmark className="text-3xl text-blue-600 mr-4" />
+              <div>
+                <p className="font-semibold text-gray-700">Visitas al castillo</p>
+                <p className="text-sm text-gray-500">Reserva tu visita al castillo de Sax</p>
+              </div>
+            </a>
+
+            <a
+              href="/formulario"
+              className="flex items-center p-5 bg-white shadow-md rounded-xl hover:bg-blue-100 transition"
+            >
+              <FaUserEdit className="text-3xl text-orange-600 mr-4" />
+              <div>
+                <p className="font-semibold text-gray-700">Incidencias</p>
+                <p className="text-sm text-gray-500">Consulta o registra incidencias</p>
+              </div>
+            </a>
+
+            <a
+              href="/mapa-desfibriladores"
+              className="flex items-center p-5 bg-white shadow-md rounded-xl hover:bg-blue-100 transition"
+            >
+              <FaMapMarkedAlt className="text-3xl text-green-600 mr-4" />
+              <div>
+                <p className="font-semibold text-gray-700">Mapa de desfibriladores</p>
+                <p className="text-sm text-gray-500">Mira la ubicación de desfibriladores</p>
+              </div>
             </a>
           </div>
         </div>
