@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS IncidenciasSax;
-USE IncidenciasSax;
+CREATE DATABASE IF NOT EXISTS CiudadSaxApp;
+USE CiudadSaxApp;
 
 -- Tabla de Usuarios
 CREATE TABLE usuarios (
@@ -9,7 +9,7 @@ CREATE TABLE usuarios (
     apellidos VARCHAR(100) NOT NULL,
     email VARCHAR(150) NOT NULL UNIQUE,
     telefono VARCHAR(15) NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,  -- Para almacenar contraseñas cifradas
+    password_hash VARCHAR(255) NOT NULL,
     rol ENUM('ciudadano', 'admin') DEFAULT 'ciudadano',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -35,8 +35,8 @@ CREATE TABLE tickets (
         'Otros'
     ) NOT NULL,
     descripcion TEXT NOT NULL,
-    ubicacion VARCHAR(255) NULL, -- Dirección o coordenadas (Opcional)
-    adjunto MEDIUMBLOB NULL, -- Para archivos adjuntos (Guardar JSON si son varios)
+    ubicacion VARCHAR(255) NULL,
+    adjunto MEDIUMBLOB NULL,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -44,10 +44,10 @@ CREATE TABLE tickets (
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
 );
 
--- Índice para acelerar las búsquedas por usuario
-CREATE INDEX idx_usuario_id ON incidencias(usuario_id);
+-- Índice por usuario para tickets
+CREATE INDEX idx_usuario_id ON tickets(usuario_id);
 
--- Control de abuso: Evita que un usuario envíe más de 1 incidencia por minuto
+-- Control de abuso: evita más de 1 incidencia por minuto
 CREATE TABLE control_abuso (
     usuario_id INT NOT NULL,
     ultima_incidencia TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -56,27 +56,39 @@ CREATE TABLE control_abuso (
 );
 
 DELIMITER //
-CREATE TRIGGER antes_insertar_incidencia
-BEFORE INSERT ON incidencias
+CREATE TRIGGER antes_insertar_ticket
+BEFORE INSERT ON tickets
 FOR EACH ROW
 BEGIN
     DECLARE ultima TIMESTAMP;
-    
-    -- Consultar la última incidencia del usuario
+
     SELECT ultima_incidencia INTO ultima 
     FROM control_abuso 
     WHERE usuario_id = NEW.usuario_id;
-    
-    -- Si el usuario ya tiene un registro y no ha pasado 1 minuto, bloquear el insert
+
     IF ultima IS NOT NULL AND TIMESTAMPDIFF(SECOND, ultima, NOW()) < 60 THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Demasiadas incidencias. Espere un momento antes de enviar otra.';
     END IF;
-    
-    -- Actualizar el registro de control_abuso
+
     INSERT INTO control_abuso (usuario_id, ultima_incidencia)
     VALUES (NEW.usuario_id, NOW())
     ON DUPLICATE KEY UPDATE ultima_incidencia = NOW();
 END;
 //
 DELIMITER ;
+
+-- Tabla de Reservas al Castillo
+CREATE TABLE reservas_castillo (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT NULL,
+    nombre VARCHAR(100) NOT NULL,
+    apellidos VARCHAR(100) NOT NULL,
+    telefono VARCHAR(20) NOT NULL,
+    email VARCHAR(150) NOT NULL,
+    fecha DATE NOT NULL,
+    horario TIME NOT NULL,
+    num_personas INT NOT NULL CHECK (num_personas BETWEEN 1 AND 40),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE SET NULL
+);
