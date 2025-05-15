@@ -6,10 +6,31 @@ const ReservaController = {
     try {
       console.log("📌 [DEBUG] req.body recibido:", req.body);
 
-      const { nombre, apellidos, telefono, email, fecha, horario, num_personas } = req.body;
+      const {
+        nombre,
+        apellidos,
+        telefono,
+        email,
+        fecha,
+        hora_inicio,
+        hora_fin,
+        num_personas
+      } = req.body;
+
       const usuario_id = req.user ? req.user.id : null; // Si el usuario no está logueado será null
 
-      const reservaId = await Reserva.create(usuario_id, nombre, apellidos, telefono, email, fecha, horario, num_personas);
+      const reservaId = await Reserva.create(
+        usuario_id,
+        nombre,
+        apellidos,
+        telefono,
+        email,
+        fecha,
+        hora_inicio,
+        hora_fin,
+        num_personas
+      );
+
       const newReserva = await Reserva.findById(reservaId);
 
       res.status(201).json({

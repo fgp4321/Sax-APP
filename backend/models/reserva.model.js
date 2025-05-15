@@ -4,18 +4,25 @@ const Reserva = {
   /**
    * 🔹 Crear una nueva reserva
    */
-  create: async (usuario_id, nombre, apellidos, telefono, email, fecha, horario, num_personas) => {
-    const sql = `
-      INSERT INTO reservas_castillo (usuario_id, nombre, apellidos, telefono, email, fecha, horario, num_personas)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    `;
-    return new Promise((resolve, reject) => {
-      db.query(sql, [usuario_id, nombre, apellidos, telefono, email, fecha, horario, num_personas], (err, result) => {
+  create: async (usuario_id, nombre, apellidos, telefono, email, fecha, hora_inicio, hora_fin, num_personas) => {
+  const sql = `
+    INSERT INTO reservas_castillo (
+      usuario_id, nombre, apellidos, telefono, email, fecha,
+      hora_inicio, hora_fin, num_personas
+    )
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `;
+  return new Promise((resolve, reject) => {
+    db.query(
+      sql,
+      [usuario_id, nombre, apellidos, telefono, email, fecha, hora_inicio, hora_fin, num_personas],
+      (err, result) => {
         if (err) reject(err);
         else resolve(result.insertId);
-      });
-    });
-  },
+      }
+    );
+  });
+},
 
   /**
    * 🔹 Obtener todas las reservas de un usuario

@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS CiudadSaxApp;
-USE CiudadSaxApp;
+CREATE DATABASE IF NOT EXISTS SaxApp;
+USE SaxApp;
 
 -- Tabla de Usuarios
 CREATE TABLE usuarios (
@@ -87,8 +87,10 @@ CREATE TABLE reservas_castillo (
     telefono VARCHAR(20) NOT NULL,
     email VARCHAR(150) NOT NULL,
     fecha DATE NOT NULL,
-    horario TIME NOT NULL,
+    hora_inicio TIME NOT NULL,
+    hora_fin TIME NOT NULL,
     num_personas INT NOT NULL CHECK (num_personas BETWEEN 1 AND 40),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE SET NULL
 );
+

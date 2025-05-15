@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FaCalendarAlt, FaPaperPlane } from "react-icons/fa";
+import { FaPaperPlane } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Navbar from "@/components/Navbar";
@@ -11,18 +11,18 @@ import es from "date-fns/locale/es";
 registerLocale("es", es);
 
 const horarios = [
-  "--- MAÑANAS ---",
-  "Viernes 9:30 a 13:30",
-  "Sábado 9:30 a 13:30",
-  "Domingo 9:30 a 13:30",
-  "Visita guiada - Viernes 9:30 a 13:30",
-  "Visita guiada - Sábado 9:30 a 13:30",
-  "Visita guiada - Domingo 9:30 a 13:30",
-  "--- TARDES ---",
-  "Viernes 16:00 a 18:00",
-  "Sábado 16:00 a 18:00",
-  "Visita guiada - Viernes 16:00 a 18:00",
-  "Visita guiada - Sábado 16:00 a 18:00"
+  { label: "--- MAÑANAS ---", disabled: true },
+  { label: "Viernes 9:30 a 13:30", hora_inicio: "09:30:00", hora_fin: "13:30:00" },
+  { label: "Sábado 9:30 a 13:30", hora_inicio: "09:30:00", hora_fin: "13:30:00" },
+  { label: "Domingo 9:30 a 13:30", hora_inicio: "09:30:00", hora_fin: "13:30:00" },
+  { label: "Visita guiada - Viernes 9:30 a 13:30", hora_inicio: "09:30:00", hora_fin: "13:30:00" },
+  { label: "Visita guiada - Sábado 9:30 a 13:30", hora_inicio: "09:30:00", hora_fin: "13:30:00" },
+  { label: "Visita guiada - Domingo 9:30 a 13:30", hora_inicio: "09:30:00", hora_fin: "13:30:00" },
+  { label: "--- TARDES ---", disabled: true },
+  { label: "Viernes 16:00 a 18:00", hora_inicio: "16:00:00", hora_fin: "18:00:00" },
+  { label: "Sábado 16:00 a 18:00", hora_inicio: "16:00:00", hora_fin: "18:00:00" },
+  { label: "Visita guiada - Viernes 16:00 a 18:00", hora_inicio: "16:00:00", hora_fin: "18:00:00" },
+  { label: "Visita guiada - Sábado 16:00 a 18:00", hora_inicio: "16:00:00", hora_fin: "18:00:00" },
 ];
 
 const FormularioReserva = ({ usuario }) => {
@@ -32,7 +32,8 @@ const FormularioReserva = ({ usuario }) => {
     telefono: "",
     email: usuario?.email || "",
     fecha: null,
-    horario: "",
+    hora_inicio: "",
+    hora_fin: "",
     numero_personas: "",
   });
 
@@ -41,9 +42,9 @@ const FormularioReserva = ({ usuario }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { nombre, apellidos, telefono, email, fecha, horario, numero_personas } = form;
+    const { nombre, apellidos, telefono, email, fecha, hora_inicio, hora_fin, numero_personas } = form;
 
-    if (!nombre || !apellidos || !telefono || !email || !fecha || !horario || !numero_personas) {
+    if (!nombre || !apellidos || !telefono || !email || !fecha || !hora_inicio || !hora_fin || !numero_personas) {
       setError("Por favor, complete todos los campos obligatorios.");
       return;
     }
@@ -54,7 +55,16 @@ const FormularioReserva = ({ usuario }) => {
       const response = await fetch("http://localhost:3000/api/reservas", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, fecha: form.fecha.toISOString().split("T")[0] }),
+        body: JSON.stringify({
+          nombre,
+          apellidos,
+          telefono,
+          email,
+          fecha: fecha.toISOString().split("T")[0],
+          hora_inicio,
+          hora_fin,
+          num_personas: parseInt(numero_personas, 10),
+        }),
       });
 
       const data = await response.json();
@@ -69,7 +79,7 @@ const FormularioReserva = ({ usuario }) => {
 
   const filtrarDiasPermitidos = (date) => {
     const day = date.getDay();
-    return day === 5 || day === 6 || day === 0;
+    return day === 5 || day === 6 || day === 0; // viernes, sábado, domingo
   };
 
   return (
@@ -128,23 +138,20 @@ const FormularioReserva = ({ usuario }) => {
             </div>
           </div>
 
-          {/* Fecha con icono */}
+          {/* Fecha */}
           <div>
             <label className="block text-gray-600 font-medium mb-2">Fecha <span className="text-red-500">*</span></label>
-            <div className="relative">
-              <DatePicker
-                selected={form.fecha}
-                onChange={(date) => setForm({ ...form, fecha: date })}
-                filterDate={filtrarDiasPermitidos}
-                placeholderText="Selecciona una fecha válida"
-                locale="es"
-                dateFormat="dd/MM/yyyy"
-                minDate={new Date()}
-                className="w-full p-4 pr-12 border border-gray-300 rounded-xl"
-                required
-              />
-              {/* <FaCalendarAlt className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" /> */}
-            </div>
+            <DatePicker
+              selected={form.fecha}
+              onChange={(date) => setForm({ ...form, fecha: date })}
+              filterDate={filtrarDiasPermitidos}
+              placeholderText="Selecciona una fecha válida"
+              locale="es"
+              dateFormat="dd/MM/yyyy"
+              minDate={new Date()}
+              className="w-full p-4 border border-gray-300 rounded-xl"
+              required
+            />
           </div>
 
           {/* Horario */}
@@ -152,16 +159,25 @@ const FormularioReserva = ({ usuario }) => {
             <label className="block text-gray-600 font-medium mb-2">Horario <span className="text-red-500">*</span></label>
             <select
               className="w-full p-4 border border-gray-300 rounded-xl"
-              value={form.horario}
-              onChange={(e) => setForm({ ...form, horario: e.target.value })}
+              value={`${form.hora_inicio}-${form.hora_fin}`}
+              onChange={(e) => {
+                const selected = horarios.find(
+                  h => !h.disabled && `${h.hora_inicio}-${h.hora_fin}` === e.target.value
+                );
+                if (selected) {
+                  setForm({ ...form, hora_inicio: selected.hora_inicio, hora_fin: selected.hora_fin });
+                }
+              }}
               required
             >
               <option value="">Selecciona un horario</option>
               {horarios.map((opt) =>
-                opt.startsWith("---") ? (
-                  <option key={opt} disabled className="font-bold text-gray-400">{opt}</option>
+                opt.disabled ? (
+                  <option key={opt.label} disabled className="font-bold text-gray-400">{opt.label}</option>
                 ) : (
-                  <option key={opt} value={opt}>{opt}</option>
+                  <option key={opt.label} value={`${opt.hora_inicio}-${opt.hora_fin}`}>
+                    {opt.label}
+                  </option>
                 )
               )}
             </select>
