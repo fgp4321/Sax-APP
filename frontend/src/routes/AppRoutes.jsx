@@ -7,6 +7,7 @@ import UserManagement from "@/pages/admin/UserManagement";
 import Formulario from "@/pages/Formulario";
 import Tickets from "@/pages/Tickets";
 import DesfibriladorMaps from "@/pages/DesfibriladorMaps";
+import FormularioReserva from "@/pages/FormularioReservasCastillo";
 
 
 import PrivateRoute from "@/routes/PrivateRoute";
@@ -21,6 +22,7 @@ export default function AppRoutes() {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/mapa-desfibriladores" element={<DesfibriladorMaps />} />
+        <Route path="/reservas-castillo" element={<FormularioReserva />} />
 
         {/* Rutas privadas */}
         <Route element={<PrivateRoute />}>

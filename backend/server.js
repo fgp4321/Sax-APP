@@ -38,6 +38,7 @@ app.use(limiter);
 
 app.use('/api/users', require('./routes/user.routes'));
 app.use('/api/tickets', require('./routes/ticket.routes'));
+app.use('/api/reservas', require('./routes/reservas.routes'));
 
 
 app.get('/', (req, res) => {
