@@ -1,9 +1,31 @@
+import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { FaMapMarkedAlt, FaClipboardList, FaLandmark } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 export default function Home() {
+  const [noticias, setNoticias] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [noticiaSeleccionada, setNoticiaSeleccionada] = useState(null);
+
+  useEffect(() => {
+    fetch("https://www.sax.es/wp-json/wp/v2/posts?per_page=3&_embed")
+      .then((res) => res.json())
+      .then((data) => setNoticias(data))
+      .catch((err) => console.error("Error al cargar noticias:", err));
+  }, []);
+
+  const abrirModal = (noticia) => {
+    setNoticiaSeleccionada(noticia);
+    setModalOpen(true);
+  };
+
+  const cerrarModal = () => {
+    setModalOpen(false);
+    setNoticiaSeleccionada(null);
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-50 to-blue-200">
       <Navbar />
@@ -37,12 +59,75 @@ export default function Home() {
         </div>
 
         {/* Noticias */}
-        <section className="mt-20 w-full max-w-4xl">
-          <h2 className="text-3xl font-semibold text-blue-700 mb-4">Últimas noticias</h2>
-          <p className="text-gray-600">Próximamente se mostrarán aquí las novedades y eventos del municipio.</p>
+        <section className="mt-20 w-full max-w-4xl text-center">
+          <h2 className="text-3xl font-semibold text-blue-700 mb-6">Últimas noticias</h2>
+
+          {noticias.length === 0 ? (
+            <p className="text-gray-600">Cargando noticias...</p>
+          ) : (
+            <div className="grid md:grid-cols-3 gap-6 text-left">
+              {noticias.map((noticia) => (
+                <div
+                  key={noticia.id}
+                  className="bg-white rounded-xl shadow-md p-4 cursor-pointer hover:shadow-lg transition"
+                  onClick={() => abrirModal(noticia)}
+                >
+                  {noticia._embedded?.["wp:featuredmedia"]?.[0]?.source_url && (
+                    <img
+                      src={noticia._embedded["wp:featuredmedia"][0].source_url}
+                      alt="Imagen destacada"
+                      className="w-full h-40 object-cover rounded-lg mb-4"
+                    />
+                  )}
+                  <h3 className="text-lg font-bold text-blue-800 mb-2" dangerouslySetInnerHTML={{ __html: noticia.title.rendered }} />
+                  <p className="text-sm text-gray-600" dangerouslySetInnerHTML={{ __html: noticia.excerpt.rendered }} />
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div className="mt-8">
+            <a
+              href="https://www.sax.es/ayuntamiento/noticias/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:underline text-sm"
+            >
+              Ver más noticias en sax.es →
+            </a>
+          </div>
         </section>
       </main>
+
       <Footer />
+
+      {/* Modal personalizado */}
+      {modalOpen && noticiaSeleccionada && (
+        <div className="fixed inset-0 bg-oklch(0.901 0.058 230.902) bg-opacity-30 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-3xl mx-4 md:mx-0 transform transition-all scale-100 relative">
+            <button
+              onClick={cerrarModal}
+              className="absolute top-4 right-4 text-gray-600 hover:text-red-500 text-xl font-bold"
+            >
+              ✖
+            </button>
+            <h2 className="text-2xl font-bold text-blue-700 mb-4" dangerouslySetInnerHTML={{ __html: noticiaSeleccionada.title.rendered }} />
+
+            {noticiaSeleccionada._embedded?.["wp:featuredmedia"]?.[0]?.source_url && (
+              <img
+                src={noticiaSeleccionada._embedded["wp:featuredmedia"][0].source_url}
+                alt="Imagen destacada"
+                className="w-full h-60 object-cover rounded-lg mb-4"
+              />
+            )}
+
+            <div
+              className="prose max-w-none text-left text-gray-700"
+              dangerouslySetInnerHTML={{ __html: noticiaSeleccionada.content.rendered }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
