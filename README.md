@@ -14,14 +14,6 @@ Esta aplicación web ha sido desarrollada para facilitar a los ciudadanos del mu
 
 Desarrollado con el objetivo de mejorar la comunicación y participación ciudadana a través de herramientas digitales intuitivas y accesibles.
 
-### Registro de nuevos usuarios.
-
-### Reserva de visitas guiadas al castillo.
-
-### Envío de quejas y sugerencias mediante un sistema de tickets.
-
-### Consulta interactiva de un mapa con la ubicación de los desfibriladores (DEA) del municipio.
-
 ## Registro
 
 ##### Crear Cuenta
