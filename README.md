@@ -1,5 +1,16 @@
 # En proceso
+## Aplicación web desarrollada para el Ayuntamiento de Sax (Alicante) que permite a los ciudadanos realizar diversas gestiones de forma sencilla y accesible. Entre las funcionalidades principales se incluyen:
+
+### Registro de nuevos usuarios.
+
+### Reserva de visitas guiadas al castillo.
+
+### Envío de quejas y sugerencias mediante un sistema de tickets.
+
+### Consulta interactiva de un mapa con la ubicación de los desfibriladores (DEA) del municipio.
+
 ## Registro
+
 ##### Crear Cuenta
 Formulario de registro para ciudadanos, con validación de DNI, correo, teléfono y opción de registrarse con Google.
 
