@@ -1,5 +1,18 @@
 # En proceso
-## Aplicación web desarrollada para el Ayuntamiento de Sax (Alicante) que permite a los ciudadanos realizar diversas gestiones de forma sencilla y accesible. Entre las funcionalidades principales se incluyen:
+# Aplicación Web para el Ayuntamiento de Sax (Alicante)
+
+Esta aplicación web ha sido desarrollada para facilitar a los ciudadanos del municipio de Sax (Alicante) la realización de diversas gestiones de manera sencilla y accesible.
+
+## Funcionalidades principales
+
+- Registro de nuevos usuarios.  
+- Reserva de visitas guiadas al castillo.  
+- Envío de quejas y sugerencias mediante un sistema de tickets.  
+- Consulta interactiva de un mapa con la ubicación de los desfibriladores (DEA) del municipio.
+
+---
+
+Desarrollado con el objetivo de mejorar la comunicación y participación ciudadana a través de herramientas digitales intuitivas y accesibles.
 
 ### Registro de nuevos usuarios.
 
